@@ -188,6 +188,7 @@ module OmniAuth
         strategy.options.client_signing_alg = :RS256
         strategy.options.client_jwk_signing_key = jwks.to_s
         strategy.options.response_type = 'code'
+        strategy.options.extra_token_params = { redirect_uri: 'https://example.com/auth/provider/callback' }
 
         strategy.unstub(:user_info)
         access_token = stub('OpenIDConnect::AccessToken')

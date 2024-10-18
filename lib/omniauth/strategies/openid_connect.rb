@@ -58,6 +58,7 @@ module OmniAuth
       option :post_logout_redirect_uri
       option :extra_authorize_params, {}
       option :allow_authorize_params, []
+      option :extra_token_params, {}
       option :uid_field, 'sub'
       option :pkce, false
       option :pkce_verifier, nil
@@ -270,6 +271,13 @@ module OmniAuth
           scope: (options.scope if options.send_scope_to_token_endpoint),
           client_auth_method: options.client_auth_method,
         }
+
+        token_request_params.merge!(options.extra_token_params) unless options.extra_token_params.empty?
+
+        if configured_response_type == 'code'
+          token_request_params[:grant_type] = :authorization_code
+          token_request_params[:code] = authorization_code
+        end
 
         token_request_params[:code_verifier] = params['code_verifier'] || session.delete('omniauth.pkce.verifier') if options.pkce
 
