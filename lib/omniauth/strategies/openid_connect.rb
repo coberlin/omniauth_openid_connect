@@ -271,6 +271,12 @@ module OmniAuth
           client_auth_method: options.client_auth_method,
         }
 
+        if configured_response_type == 'code'
+          token_request_params[:grant_type] = :authorization_code
+          token_request_params[:code] = authorization_code
+          token_request_params[:redirect_uri] = redirect_uri
+        end
+
         token_request_params[:code_verifier] = params['code_verifier'] || session.delete('omniauth.pkce.verifier') if options.pkce
 
         @access_token = client.access_token!(token_request_params)
